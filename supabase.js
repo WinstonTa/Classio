@@ -23,6 +23,10 @@ export const supabase = createClient(
 );
 
 export function authRedirectTo() {
+  const { hostname } = window.location;
+  if (hostname === "127.0.0.1" || hostname === "localhost") {
+    return "http://127.0.0.1:5173";
+  }
   return window.location.origin;
 }
 

@@ -13,5 +13,5 @@ function getSupabaseClient() {
 }
 
 function homeRedirect() {
-  return `${window.location.origin}/home`;
+  return "http://127.0.0.1:5173";
 }
