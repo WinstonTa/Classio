@@ -1,6 +1,6 @@
 import { useState } from "react";
 import ClassioNav from "./classio-nav.jsx";
-import { authRedirectTo, supabase } from "./supabase";
+import { appData, supabase } from "./supabase";
 
 export default function Recommendations({ onNavigate, onBackToHome, onSignOut }) {
   const [showRecommendations, setShowRecommendations] = useState(false);
@@ -43,22 +43,30 @@ export default function Recommendations({ onNavigate, onBackToHome, onSignOut })
         throw new Error("You must be signed in to get recommendations");
       }
 
-      const response = await fetch("http://127.0.0.1:8000/recommend-classes", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          ...(session?.access_token ? { Authorization: `Bearer ${session.access_token}` } : {}),
-        },
-        body: JSON.stringify({ user_id: user.id, term: "Fall 2026", match_count: 10 }),
-      });
+      const { data: profile, error: profileError } = await appData()
+        .from("profiles")
+        .select("quiz_vector")
+        .eq("id", user.id)
+        .maybeSingle();
 
-      if (!response.ok) {
-        const err = await response.json();
-        throw new Error(err.detail || "Failed to get recommendations");
+      if (profileError) {
+        throw new Error(profileError.message);
+      }
+      if (!profile?.quiz_vector) {
+        throw new Error("Complete the quiz first to get course recommendations");
       }
 
-      const result = await response.json();
-      const recs = result.recommendations || result.reccomendations || [];
+      const { data: recsData, error: recsError } = await supabase.rpc("match_offerings", {
+        query_embedding: profile.quiz_vector,
+        filter_term: "Fall 2026",
+        match_count: 10,
+      });
+
+      if (recsError) {
+        throw new Error(recsError.message);
+      }
+
+      const recs = recsData || [];
 
       const mapped = recs.map((rec) => ({
         id: rec.offering_id,
