@@ -103,6 +103,12 @@ export default function LandingPage({
             >
               Course Recommendations
             </button>
+            <button 
+              onClick={() => onNavigate?.("about")} 
+              className="transition hover:text-amber-400 focus:outline-none"
+            >
+              About
+            </button>
           </nav>
 
           {/* Far Right Action Buttons */}
@@ -139,10 +145,11 @@ export default function LandingPage({
       </header>
 
       {/* Mobile Navigation Bar Line (Home removed) */}
-      <nav className="flex lg:hidden items-center justify-center space-x-8 px-6 py-3 text-xs font-medium text-zinc-400 border-b border-zinc-800 bg-zinc-950" aria-label="Mobile Navigation">
+      <nav className="flex lg:hidden items-center justify-center space-x-5 px-4 py-3 text-xs font-medium text-zinc-400 border-b border-zinc-800 bg-zinc-950" aria-label="Mobile Navigation">
         <button onClick={() => onNavigate?.("schedule")} className="hover:text-amber-400">Schedule</button>
         <button onClick={() => onNavigate?.("quiz")} className="hover:text-amber-400">Quiz</button>
         <button onClick={() => onNavigate?.("recommendations")} className="hover:text-amber-400">Recommendations</button>
+        <button onClick={() => onNavigate?.("about")} className="hover:text-amber-400">About</button>
       </nav>
 
       <section className="relative z-10 flex flex-1 flex-col items-center justify-center px-6 py-24 text-center" style={{ fontFamily: "'Lexend', sans-serif" }}>

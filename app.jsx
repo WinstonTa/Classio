@@ -5,6 +5,7 @@ import Signup from "./signup.jsx";
 import Quiz from "./quiz.jsx";
 import Recommendations from "./recommendations.jsx";
 import Schedule from "./schedule.jsx";
+import About from "./about.jsx";
 import { supabase, supabaseConfigured } from "./supabase";
 
 function ClassioMessage({ children, error = false }) {
@@ -17,7 +18,7 @@ function ClassioMessage({ children, error = false }) {
   );
 }
 
-const SIGNED_IN_PAGES = ["landing", "quiz", "schedule", "recommendations"];
+const SIGNED_IN_PAGES = ["landing", "quiz", "schedule", "recommendations", "about"];
 
 export default function App() {
   const [session, setSession] = useState(undefined);
@@ -54,6 +55,10 @@ export default function App() {
   };
 
   const handleNavigate = (page) => {
+    if (page === "about") {
+      setGuestView("about");
+      return;
+    }
     if (page === "quiz" || page === "schedule" || page === "recommendations") {
       setGuestView("login");
     }
@@ -115,6 +120,17 @@ export default function App() {
       );
     }
 
+    if (signedInView === "about") {
+      return (
+        <About
+          onNavigate={handleSignedInNavigate}
+          onGoHome={goToLanding}
+          actionLabel="Sign out"
+          onAction={signOut}
+        />
+      );
+    }
+
     return (
       <Quiz
         onSignOut={signOut}
@@ -140,6 +156,17 @@ export default function App() {
         onSwitchToLogin={goToLogin}
         onBackToHome={goToLanding}
         onNavigate={handleNavigate}
+      />
+    );
+  }
+
+  if (guestView === "about") {
+    return (
+      <About
+        onNavigate={handleNavigate}
+        onGoHome={goToLanding}
+        actionLabel="Login"
+        onAction={goToLogin}
       />
     );
   }

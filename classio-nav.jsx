@@ -53,6 +53,13 @@ export default function ClassioNav({
             >
               Course Recommendations
             </button>
+            <button
+              type="button"
+              onClick={() => onNavigate?.("about")}
+              className={linkClass("about")}
+            >
+              About
+            </button>
           </nav>
 
           <div className="flex items-center">
@@ -68,7 +75,7 @@ export default function ClassioNav({
       </header>
 
       <nav
-        className="flex items-center justify-center space-x-8 border-b border-zinc-800 bg-zinc-950 px-6 py-3 text-xs font-medium text-zinc-400 lg:hidden"
+        className="flex items-center justify-center space-x-5 border-b border-zinc-800 bg-zinc-950 px-4 py-3 text-xs font-medium text-zinc-400 lg:hidden"
         aria-label="Mobile Navigation"
       >
         <button
@@ -91,6 +98,13 @@ export default function ClassioNav({
           className={linkClass("recommendations")}
         >
           Recommendations
+        </button>
+        <button
+          type="button"
+          onClick={() => onNavigate?.("about")}
+          className={linkClass("about")}
+        >
+          About
         </button>
       </nav>
     </>
