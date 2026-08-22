@@ -1,15 +1,25 @@
 import { createClient } from "@supabase/supabase-js";
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+function resolveSupabaseUrl(raw) {
+  const value = (raw || "").trim();
+  if (!value) return "";
+  if (/^https?:\/\//i.test(value)) return value.replace(/\/$/, "");
+  if (/^[a-z0-9]+$/i.test(value)) return `https://${value}.supabase.co`;
+  return value;
+}
+
+const supabaseUrl = resolveSupabaseUrl(import.meta.env.VITE_SUPABASE_URL);
 const supabasePublishableKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
 
 export const supabaseConfigured = Boolean(
-  supabaseUrl && supabasePublishableKey
+  supabaseUrl &&
+    supabasePublishableKey &&
+    /^https:\/\//i.test(supabaseUrl)
 );
 
 export const supabase = createClient(
-  supabaseUrl || "",
-  supabasePublishableKey || ""
+  supabaseConfigured ? supabaseUrl : "https://unavailable.supabase.co",
+  supabaseConfigured ? supabasePublishableKey : "unavailable"
 );
 
 export function authRedirectTo() {
