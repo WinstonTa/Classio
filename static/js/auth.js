@@ -25,7 +25,7 @@ function initSignup() {
       return;
     }
     if (data.session) {
-      window.location.href = "/home";
+      window.location.href = homeRedirect();
       return;
     }
     window.location.href = "/check-email";
@@ -57,7 +57,7 @@ function initLogin() {
       dialog?.showModal();
       return;
     }
-    window.location.href = "/home";
+    window.location.href = homeRedirect();
   });
 
   googleBtn?.addEventListener("click", () => signInWithGoogle(client, status));
@@ -79,10 +79,6 @@ async function signInWithGoogle(client, status) {
 
 async function initHome() {
   const client = getSupabaseClient();
-  const status = document.getElementById("home-status");
-  const details = document.getElementById("profile-details");
-  const signOutBtn = document.getElementById("sign-out");
-
   const {
     data: { session },
     error: sessionError,
@@ -93,32 +89,7 @@ async function initHome() {
     return;
   }
 
-  signOutBtn?.addEventListener("click", async () => {
-    await client.auth.signOut();
-    window.location.href = "/";
-  });
-
-  const { data: profile, error } = await client
-    .schema("app_data")
-    .from("profiles")
-    .select("id,email,created_at")
-    .eq("id", session.user.id)
-    .single();
-
-  if (error) {
-    setStatus(
-      status,
-      `Logged in, but the profile row could not be read: ${error.message}`,
-      true
-    );
-    return;
-  }
-
-  setStatus(status, "User successfully logged in!", false);
-  if (details) {
-    const email = profile.email || session.user.email || "(no email)";
-    details.textContent = `Profile ${profile.id} · ${email}`;
-  }
+  window.location.href = homeRedirect();
 }
 
 document.addEventListener("DOMContentLoaded", () => {
